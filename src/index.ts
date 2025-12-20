@@ -5,6 +5,7 @@ dotenv.config();
 import AuthRoutes from "./routes/AuthRoutes";
 import cors from "cors";
 import RoomRoutes from "./routes/RoomRoutes";
+import BookingRoutes from "./routes/BookingRoutes";
 const app = express();
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
 
@@ -20,7 +21,7 @@ app.use(express.json());
 app.use(cors());
 app.use("/", AuthRoutes);
 app.use("/api/rooms", RoomRoutes);
-
+app.use("/api/bookings", BookingRoutes);
 
 app.get("/", (_req, res) => {
     res.json({ message: "TypeScript + Express server here" });
