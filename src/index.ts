@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
 import AuthRoutes from "./routes/AuthRoutes";
+import cors from "cors";
 
 const app = express();
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
@@ -16,7 +17,9 @@ mongoose.connect(process.env.MONGO_URI ?? '')
     })
 
 app.use(express.json());
-app.use("/auth", AuthRoutes);
+app.use(cors());
+app.use("/", AuthRoutes);
+
 
 app.get("/", (_req, res) => {
     res.json({ message: "TypeScript + Express server here" });
