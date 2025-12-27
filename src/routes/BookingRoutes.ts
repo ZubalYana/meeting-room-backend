@@ -26,6 +26,15 @@ router.get("/:roomId", auth, async (req, res) => {
     }
 });
 
+router.get("/", auth, async (req: any, res: any) => {
+    try {
+        const bookings = await Booking.find({ user: req.userId });
+        res.json(bookings);
+    } catch (err) {
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
 router.post("/", auth, async (req: any, res: any) => {
     try {
         const { roomId, date, startTime, endTime } = req.body;
