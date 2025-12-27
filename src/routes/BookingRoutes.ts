@@ -19,7 +19,9 @@ const auth = (req: any, res: any, next: any) => {
 
 router.get("/:roomId", auth, async (req, res) => {
     try {
-        const bookings = await Booking.find({ room: req.params.roomId });
+        const bookings = await Booking.find({ room: req.params.roomId })
+            .populate("user", "email")
+            .populate("room", "name");
         res.json(bookings);
     } catch (err) {
         res.status(500).json({ message: "Server error" });
@@ -28,7 +30,9 @@ router.get("/:roomId", auth, async (req, res) => {
 
 router.get("/", auth, async (req: any, res: any) => {
     try {
-        const bookings = await Booking.find({ user: req.userId });
+        const bookings = await Booking.find()
+            .populate("user", "email")
+            .populate("room", "name");
         res.json(bookings);
     } catch (err) {
         res.status(500).json({ message: "Server error" });
