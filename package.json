@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/ZubalYana/meeting-room-backend#readme",
   "devDependencies": {
+    "@types/nodemailer": "^7.0.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
@@ -35,6 +36,7 @@
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.0.2"
+    "mongoose": "^9.0.2",
+    "nodemailer": "^7.0.12"
   }
 }

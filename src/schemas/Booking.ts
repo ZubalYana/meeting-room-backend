@@ -6,6 +6,7 @@ const bookingSchema = new mongoose.Schema({
     date: { type: Date, required: true },
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
+    attendees: { type: Array, default: [] },
 }, { timestamps: true });
 
 export default mongoose.model("Booking", bookingSchema);

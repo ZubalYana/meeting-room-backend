@@ -2,8 +2,18 @@ import express from "express";
 import Booking from "../schemas/Booking";
 import Room from "../schemas/Room";
 import jwt from "jsonwebtoken";
-
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
 const router = express.Router();
+dotenv.config();
+
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.SENDING_EMAIL,
+        pass: process.env.APP_PASSWORD
+    }
+});
 
 const auth = (req: any, res: any, next: any) => {
     const token = req.headers.authorization?.split(" ")[1];
@@ -41,7 +51,7 @@ router.get("/", auth, async (req: any, res: any) => {
 
 router.post("/", auth, async (req: any, res: any) => {
     try {
-        const { roomId, date, startTime, endTime } = req.body;
+        const { roomId, date, startTime, endTime, attendees } = req.body;
 
         if (!roomId || !date || !startTime || !endTime) {
             return res.status(400).json({ message: "All fields are required" });
@@ -55,12 +65,36 @@ router.post("/", auth, async (req: any, res: any) => {
             user: req.userId,
             date,
             startTime,
-            endTime
+            endTime,
+            attendees: attendees
         });
 
         await booking.save();
+
+        if (attendees && attendees.length > 0) {
+            const roomDetails = await Room.findById(roomId);
+            const roomName = roomDetails ? roomDetails.name : "Meeting Room";
+
+            const mailOptions = {
+                from: '"Office Booker" <your-email@gmail.com>',
+                to: attendees,
+                subject: `Meeting Invitation: ${roomName}`,
+                html: `
+                    <h3>You have been invited to a meeting</h3>
+                    <p><strong>Room:</strong> ${roomName}</p>
+                    <p><strong>Date:</strong> ${date}</p>
+                    <p><strong>Time:</strong> ${startTime} - ${endTime}</p>
+                    <br/>
+                    <p>Please mark your calendar.</p>
+                `
+            };
+
+            transporter.sendMail(mailOptions).catch(err => console.error("Email failed:", err));
+        }
+
         res.status(201).json(booking);
     } catch (err) {
+        console.error(err);
         res.status(500).json({ message: "Server error" });
     }
 });
