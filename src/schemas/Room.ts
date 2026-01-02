@@ -5,6 +5,7 @@ export interface IRoom extends Document {
     capacity: number;
     location: string;
     description?: string;
+    advantages?: string;
 }
 
 const RoomSchema: Schema = new Schema({
@@ -12,6 +13,7 @@ const RoomSchema: Schema = new Schema({
     capacity: { type: Number, required: true },
     location: { type: String, required: true },
     description: { type: String },
+    advantages: { type: String }
 });
 
 export default mongoose.model<IRoom>("Room", RoomSchema);
